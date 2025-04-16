@@ -21,7 +21,9 @@
 #define BUZZER_PIN 26
 
 
-#define BLOCO_GRAVACAO 1  // bloco 4 do setor 1 (correto)
+#define BLOCO_GRAVACAO_EDUCA 1  // bloco 4 do setor 1 (correto)
+#define BLOCO_GRAVACAO_COLETOR 1  // bloco 4 do setor 1 (correto)
+#define BLOCO_GRAVACAO_REI 1  // bloco 4 do setor 1 (correto)
 
 // Instanciação dos objetos
 MFRC522 rfid(SS_PIN, RST_PIN);
@@ -62,6 +64,7 @@ struct MenuItem {
 };
 
 // Submenus
+/*                      
 MenuItem menuAlfabeto[] = {
   {"A", NULL, 0}, {"B", NULL, 0}, {"C", NULL, 0}, {"D", NULL, 0}, {"E", NULL, 0},
   {"F", NULL, 0}, {"G", NULL, 0}, {"H", NULL, 0}, {"I", NULL, 0}, {"J", NULL, 0},
@@ -126,6 +129,7 @@ MenuItem menuDirecoesEduca[] = {
   {"Baixo 3X", NULL, 0}
 };
 
+
 MenuItem menuEducaNaveSub[] = {
   {"Alfabeto", menuAlfabeto, 26},
   {"Musica", menuMusicaEduca, 10},  
@@ -139,6 +143,7 @@ MenuItem menuEducaNave[] = {
   {"Completo Educa", NULL, 0},
   {"Carta Educa", menuEducaNaveSub, 6}
 };
+
 
 MenuItem menuColetorIndividual[] = {
   {"Acionar", NULL, 0},
@@ -200,12 +205,12 @@ MenuItem menuRoboReiIndividual[] = {
 MenuItem menuRoboRei[] = {
   {"Baralho Completo", NULL, 0},
   {"Carta Individual", menuRoboReiIndividual, 20}
-};
+};*/
 
 MenuItem mainMenu[] = {
-  {"Robo Rei", menuRoboRei, 2},
-  {"Coletor de Dados", menuColetorDados, 2},
-  {"Educa Nave", menuEducaNave, 2}
+  {"Robo Rei", NULL, 0},
+  {"Coletor de Dados", NULL, 0},
+  {"Educa Nave", NULL, 0}
 };
 
 
@@ -213,11 +218,6 @@ MenuItem mainMenu[] = {
 MenuItem* menuStack[5];
 int menuSizeStack[5];
 int indexStack[5];
-
-// ... resto do código permanece o mesmo ...
-
-
-
 
 
 void setup() {
@@ -305,14 +305,14 @@ void loop() {
     } else {
       const char* title = selected.title;
 
-      if (strcmp(title, "Baralho Completo") == 0) {
-        executarBaralhoCompleto();
+      if (strcmp(title, "Robo Rei") == 0) {
+        gravacao_rei();
       }
-      else if (strcmp(title, "Alfabeto") == 0 && currentLevel == 1 && strcmp(menuStack[0][indexStack[0]].title, "Carta Educa") == 0) {
-        gravacao();
+      else if (strcmp(title, "Educa Nave") == 0) {
+        gravacao_coletor();
       }
-      else if (strcmp(title, "Completo Educa") == 0) {
-        gravacao();
+      else if (strcmp(title, "Educa Nave") == 0) {
+        gravacao_educanave();
       }
 
       lcd.clear();
@@ -394,5 +394,3 @@ void executarAlfabeto() {
   lcd.print("A");
   delay(2000);
 }
-
-

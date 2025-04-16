@@ -1,6 +1,5 @@
-
 // Dicionário: valor a ser gravado => nome da carta (exibido apenas)
-const char* valores[][2] = {
+const char* coletor_dados[][2] = {
   {"A", "A"},               
   {"B", "B"},
   {"C", "C"},
@@ -68,45 +67,75 @@ const char* valores[][2] = {
   {"T", "Triste"},
   {"S", "Surpresa"}
 };
-const int totalCartoes = sizeof(valores) / sizeof(valores[0]);
+const int totalCartoes_dados = sizeof(coletor_dados) / sizeof(coletor_dados[0]);
 
 
-void gravacao () {
-  for (int i = 0; i < totalCartoes; i++) {
-    const char* valor = valores[i][0];
-    const char* nome = valores[i][1];
+void gravacao_coletor() {
+  int i = 0;
+  unsigned long backPressStart = 0;
+
+  while (i < totalCartoes_dados) {
+    const char* valor = coletor_dados[i][0];
+    const char* nome = coletor_dados[i][1];
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Aproxime o cartao:");
+    lcd.setCursor(0, 1);
+    lcd.print(nome);
 
     bool sucesso = false;
     while (!sucesso) {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Aproxime o cartao:");
-      lcd.setCursor(0, 1);
-      //lcd.print("Nome: ");
-      lcd.print(nome);
-      //lcd.setCursor(0, 2);
-      //lcd.print("Valor: ");
-      //lcd.print(valor);
+      // Verifica botoes
+      if (digitalRead(38) == LOW) {  // Baixo - avança
+        i = min(i + 1, totalCartoes_dados - 1);
+        delay(300);
+        break;
+      }
+      if (digitalRead(47) == LOW) {  // Cima - volta
+        i = max(i - 1, 0);
+        delay(300);
+        break;
+      }
+
+      // Botão Back pressionado
+      if (digitalRead(48) == LOW) {
+        if (backPressStart == 0) backPressStart = millis();
+        else if (millis() - backPressStart > 2000) {
+          lcd.clear();
+          lcd.setCursor(0, 1);
+          lcd.print("Menu principal...");
+          delay(1500);
+          return;  // Volta ao menu principal
+        }
+      } else if (backPressStart > 0) {
+        // Pressão curta: cancelar gravação
+        lcd.clear();
+        lcd.setCursor(0, 1);
+        lcd.print("Gravacao cancelada");
+        delay(1500);
+        return;
+      }
 
       // Aguarda cartão
       if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) {
-        delay(500);
+        delay(100);
         continue;
       }
 
-      // Prepara dados para gravar (16 bytes)
+      // Prepara dados
       byte buffer[16];
-      memset(buffer, 0x00, 16);  // Preenche o buffer com espaços   //AQUI ESCOLHE COMO SERA PREENCHIDO OS BYTES VAZIOS
+      memset(buffer, 0x00, 16);
       int len = strlen(valor);
-      memcpy(buffer, valor, min(16, len));  // Copia o valor no buffer
+      memcpy(buffer, valor, min(16, len));
 
-      // Autentica setor 1 (bloco 4)
+      // Autentica
       MFRC522::MIFARE_Key key;
       for (byte j = 0; j < 6; j++) key.keyByte[j] = 0xFF;
 
       MFRC522::StatusCode status = rfid.PCD_Authenticate(
         MFRC522::PICC_CMD_MF_AUTH_KEY_A,
-        BLOCO_GRAVACAO,  // bloco 4 do setor 1
+        BLOCO_GRAVACAO_COLETOR,
         &key,
         &(rfid.uid)
       );
@@ -121,8 +150,8 @@ void gravacao () {
         continue;
       }
 
-      // Grava os dados
-      status = rfid.MIFARE_Write(BLOCO_GRAVACAO, buffer, 16);
+      // Grava
+      status = rfid.MIFARE_Write(BLOCO_GRAVACAO_COLETOR, buffer, 16);
       if (status != MFRC522::STATUS_OK) {
         lcd.setCursor(0, 3);
         lcd.print("Falha na gravacao ");
@@ -133,10 +162,10 @@ void gravacao () {
         continue;
       }
 
-      // Verifica a gravação
+      // Verifica gravação
       byte leitura[18];
       byte tamanho = 18;
-      status = rfid.MIFARE_Read(BLOCO_GRAVACAO, leitura, &tamanho);
+      status = rfid.MIFARE_Read(BLOCO_GRAVACAO_COLETOR, leitura, &tamanho);
       if (status != MFRC522::STATUS_OK) {
         lcd.setCursor(0, 3);
         lcd.print("Erro leitura check ");
@@ -147,12 +176,12 @@ void gravacao () {
         continue;
       }
 
-      // Verifica se o valor gravado confere
       if (memcmp(buffer, leitura, 16) == 0) {
         lcd.setCursor(0, 3);
         lcd.print("Gravado com sucesso");
         beepSucesso();
         sucesso = true;
+        i++;  // Avança para o próximo valor
       } else {
         lcd.setCursor(0, 3);
         lcd.print("Verificacao falhou ");
@@ -163,24 +192,15 @@ void gravacao () {
       rfid.PCD_StopCrypto1();
       delay(2000);
     }
+    backPressStart = 0;  // reseta controle do botão back
   }
 
-  // Finalizou todos os cartões
+  // Final
   lcd.clear();
   lcd.setCursor(0, 1);
   lcd.print(" Todos gravados! ");
   delay(2000);
-  return;     //while (true) delay(1000);
 }
 
-void beepSucesso() {
-  NewTone(BUZZER_PIN, 1000, 200);  // Som de sucesso
-  delay(200);
-}
 
-void beepErro() {
-  for (int i = 0; i < 2; i++) {
-    NewTone(BUZZER_PIN, 400, 150);  // Som de erro
-    delay(200);
-  }
-}
+
