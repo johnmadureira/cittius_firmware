@@ -64,155 +64,25 @@ struct MenuItem {
 };
 
 // Submenus
-/*                      
-MenuItem menuAlfabeto[] = {
-  {"A", NULL, 0}, {"B", NULL, 0}, {"C", NULL, 0}, {"D", NULL, 0}, {"E", NULL, 0},
-  {"F", NULL, 0}, {"G", NULL, 0}, {"H", NULL, 0}, {"I", NULL, 0}, {"J", NULL, 0},
-  {"K", NULL, 0}, {"L", NULL, 0}, {"M", NULL, 0}, {"N", NULL, 0}, {"O", NULL, 0},
-  {"P", NULL, 0}, {"Q", NULL, 0}, {"R", NULL, 0}, {"S", NULL, 0}, {"T", NULL, 0},
-  {"U", NULL, 0}, {"V", NULL, 0}, {"W", NULL, 0}, {"X", NULL, 0}, {"Y", NULL, 0},
-  {"Z", NULL, 0}
-};
-
-MenuItem menuMusicaEduca[] = {
-  {"Do", NULL, 0},
-  {"Re", NULL, 0},
-  {"Mi", NULL, 0},
-  {"Fa", NULL, 0},
-  {"Sol", NULL, 0},
-  {"La", NULL, 0},
-  {"Si", NULL, 0},
-  {"Piano", NULL, 0},
-  {"Harpa", NULL, 0},
-  {"Flauta", NULL, 0}
-};
-
-MenuItem menuCoresEduca[] = {
-  {"Azul", NULL, 0},
-  {"Amarelo", NULL, 0},
-  {"Verde", NULL, 0},
-  {"Vermelho", NULL, 0},
-  {"Marrom", NULL, 0},
-  {"Cinza", NULL, 0}
-};
-
-MenuItem menuNumerosEduca[] = {
-  {"0", NULL, 0},
-  {"1", NULL, 0},
-  {"2", NULL, 0},
-  {"3", NULL, 0},
-  {"4", NULL, 0},
-  {"5", NULL, 0},
-  {"6", NULL, 0},
-  {"7", NULL, 0},
-  {"8", NULL, 0},
-  {"9", NULL, 0}
-};
-
-MenuItem menuEmocoesEduca[] = {
-  {"Medo", NULL, 0},
-  {"Feliz", NULL, 0},
-  {"Nojo", NULL, 0},
-  {"Surpresa", NULL, 0},
-  {"Raiva", NULL, 0},
-  {"Triste", NULL, 0}
-};
-
-MenuItem menuDirecoesEduca[] = {
-  {"Direita", NULL, 0},
-  {"Esquerda", NULL, 0},
-  {"Cima", NULL, 0},
-  {"Baixo", NULL, 0},
-  {"Direita 3X", NULL, 0},
-  {"Esquerda 3X", NULL, 0},
-  {"Cima 3X", NULL, 0},
-  {"Baixo 3X", NULL, 0}
-};
-
-
-MenuItem menuEducaNaveSub[] = {
-  {"Alfabeto", menuAlfabeto, 26},
-  {"Musica", menuMusicaEduca, 10},  
-  {"Cores", menuCoresEduca, 6},
-  {"Numeros", menuNumerosEduca, 10},
-  {"Emocoes", menuEmocoesEduca, 6},
-  {"Direcoes", menuDirecoesEduca, 8}
-};
-
-MenuItem menuEducaNave[] = {
-  {"Completo Educa", NULL, 0},
-  {"Carta Educa", menuEducaNaveSub, 6}
-};
-
-
-MenuItem menuColetorIndividual[] = {
-  {"Acionar", NULL, 0},
-  {"Suspender", NULL, 0},
-  {"Aguarde", NULL, 0},
-  {"1 segundo", NULL, 0},
-  {"3 segundos", NULL, 0},
-  {"5 segundos", NULL, 0},
-  {"Buzzer", NULL, 0},
-  {"LED", NULL, 0},
-  {"Maior que", NULL, 0},
-  {"Menor que", NULL, 0},
-  {"Igual", NULL, 0},
-  {"Pressao dif.", NULL, 0},
-  {"Bussola", NULL, 0},
-  {"Temp/Umidade rel.", NULL, 0},
-  {"Temperatura", NULL, 0},
-  {"Corrente eletrica", NULL, 0},
-  {"Efeito Hall", NULL, 0},
-  {"Detector Sonoro", NULL, 0},
-  {"Forca", NULL, 0},
-  {"Ultrassonico", NULL, 0},
-  {"pH", NULL, 0},
-  {"Umidade do solo", NULL, 0},
-  {"Freq. Cardiaca", NULL, 0},
-  {"Prog 1", NULL, 0},
-  {"Prog 2", NULL, 0},
-  {"Prog 3", NULL, 0}
-};
-
 MenuItem menuColetorDados[] = {
-  {"Baralho Completo", NULL, 0},
-  {"Carta Individual", menuColetorIndividual, 26}
+  {"Fisica (laranja)", NULL, 0},
+  {"Matematica (verm.)", NULL, 0},
+  {"Quimica (verde)", NULL, 0},
+  {"Biologia (azul)", NULL, 0}
 };
 
-MenuItem menuRoboReiIndividual[] = {
-  {"Carta inicio", NULL, 0},
-  {"Mover p/ frente", NULL, 0},
-  {"Mover p/ tras", NULL, 0},
-  {"Girar p/ direita", NULL, 0},
-  {"Girar p/ esquerda", NULL, 0},
-  {"Girar p/ tras", NULL, 0},
-  {"Multiplicador 2x", NULL, 0},
-  {"Multiplicador 3x", NULL, 0},
-  {"Multiplicador de 4x", NULL, 0},
-  {"Aguardar 3s", NULL, 0},
-  {"Aguardar 5s", NULL, 0},
-  {"Tocar musica 1", NULL, 0},
-  {"Tocar musica 2", NULL, 0},
-  {"Tocar musica 3", NULL, 0},
-  {"Tocar musica 4", NULL, 0},
-  {"Tocar musica 5", NULL, 0},
-  {"Tocar musica 6", NULL, 0},
-  {"Som de acerto", NULL, 0},
-  {"Som em loop", NULL, 0},
-  {"Carta fim", NULL, 0}
-};
 
-MenuItem menuRoboRei[] = {
-  {"Baralho Completo", NULL, 0},
-  {"Carta Individual", menuRoboReiIndividual, 20}
-};*/
 
-MenuItem mainMenu[] = {
+MenuItem gravacaoCartas[] = {
   {"Robo Rei", NULL, 0},
-  {"Coletor de Dados", NULL, 0},
+  {"Coletor de Dados", menuColetorDados, 4},
   {"Educa Nave", NULL, 0}
 };
 
+MenuItem mainMenu[] = {
+  {"Gravador RFID", gravacaoCartas, 3},
+  {"Teste Sensores", NULL, 0}
+};
 
 // Pilha de menus
 MenuItem* menuStack[5];
