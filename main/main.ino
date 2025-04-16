@@ -4,14 +4,29 @@
 # Data de Criação: 04/04/2025
 # Descrição: Este módulo implementa a função de gravador RFID com dicionário pré estabelecido
 # Última Modificação: 05/04/2025
-# Versão: 0.2
+# Versão: 0.3
 # ==============================================================================
 */
 
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include <MFRC522.h>
+#include <SPI.h>
+#include <NewTone.h>
 
+
+// Pinos e definições
+#define SS_PIN  42
+#define RST_PIN 255 // não utilizado
+#define BUZZER_PIN 26
+
+
+#define BLOCO_GRAVACAO 1  // bloco 4 do setor 1 (correto)
+
+// Instanciação dos objetos
+MFRC522 rfid(SS_PIN, RST_PIN);
 LiquidCrystal_I2C lcd(0x27, 20, 4);
+
 
 // Pinos dos botões
 const int btnUp = 47;
@@ -113,7 +128,7 @@ MenuItem menuDirecoesEduca[] = {
 
 MenuItem menuEducaNaveSub[] = {
   {"Alfabeto", menuAlfabeto, 26},
-  {"Musica", menuMusicaEduca, 10},
+  {"Musica", menuMusicaEduca, 10},  
   {"Cores", menuCoresEduca, 6},
   {"Numeros", menuNumerosEduca, 10},
   {"Emocoes", menuEmocoesEduca, 6},
@@ -121,8 +136,8 @@ MenuItem menuEducaNaveSub[] = {
 };
 
 MenuItem menuEducaNave[] = {
-  {"Baralho Completo", NULL, 0},
-  {"Carta Individual", menuEducaNaveSub, 6}
+  {"Completo Educa", NULL, 0},
+  {"Carta Educa", menuEducaNaveSub, 6}
 };
 
 MenuItem menuColetorIndividual[] = {
@@ -202,7 +217,15 @@ int indexStack[5];
 // ... resto do código permanece o mesmo ...
 
 
+
+
+
 void setup() {
+  Serial.begin(115200);
+  SPI.begin();
+  rfid.PCD_Init();
+  pinMode(BUZZER_PIN, OUTPUT);
+
   lcd.init();
   lcd.backlight();
 
@@ -285,19 +308,19 @@ void loop() {
       if (strcmp(title, "Baralho Completo") == 0) {
         executarBaralhoCompleto();
       }
-      else if (strcmp(title, "Carta Individual") == 0 && currentLevel == 1 && strcmp(menuStack[0][indexStack[0]].title, "Educa Nave") == 0) {
-        executarCartaEduca();
+      else if (strcmp(title, "Alfabeto") == 0 && currentLevel == 1 && strcmp(menuStack[0][indexStack[0]].title, "Carta Educa") == 0) {
+        gravacao();
       }
-      else if (strcmp(title, "Alfabeto") == 0) {
-        executarAlfabeto();
+      else if (strcmp(title, "Completo Educa") == 0) {
+        gravacao();
       }
 
       lcd.clear();
       lcd.setCursor(0, 0);
-      lcd.print("Executando:");
-      lcd.setCursor(0, 1);
-      lcd.print(sanitize(title));
-      delay(1000);
+      //lcd.print("Executando:");
+      //lcd.setCursor(0, 1);
+      //lcd.print(sanitize(title));
+      //delay(1000);
       showMenu();
     }
   }
@@ -371,3 +394,5 @@ void executarAlfabeto() {
   lcd.print("A");
   delay(2000);
 }
+
+
