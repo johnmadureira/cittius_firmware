@@ -3,16 +3,18 @@
 # Nome do Desenvolvedor: João Victor Madureira de Oliveira Almeida
 # Data de Criação: 04/04/2025
 # Descrição: Este módulo implementa a função de gravador RFID com dicionário pré estabelecido
-# Última Modificação: 05/04/2025
-# Versão: 0.3
+# Última Modificação: 16/04/2025
+# Versão: 0.6
 # ==============================================================================
 */
 
 #include <Wire.h>
+#include <OneWire.h>
 #include <LiquidCrystal_I2C.h>
 #include <MFRC522.h>
 #include <SPI.h>
 #include <NewTone.h>
+#include <DallasTemperature.h>
 
 
 // Pinos e definições
@@ -31,18 +33,22 @@ LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 
 // Pinos dos botões
-const int btnUp = 47;
-const int btnDown = 38;
-const int btnEnter = 49;
-const int btnBack = 48;
+const byte btnUp = 47;
+const byte btnDown = 38;
+const byte btnEnter = 49;
+const byte btnBack = 48;
+
+const byte sensorpin_1 = 62;
+const byte sensorpin_2 = 2;
 
 // Controle de menu
-int currentMenuIndex = 0;
-int currentLevel = 0;
-int cursorPosition = 0;
+byte currentMenuIndex = 0;
+byte currentLevel = 0;
+byte cursorPosition = 0;
 
-const int MAX_ITEMS = 10;
-const int LCD_ROWS = 4;
+const byte MAX_ITEMS = 10;
+const byte LCD_ROWS = 4;
+
 bool showingWelcome = true;
 
 // Debounce
@@ -50,7 +56,7 @@ unsigned long lastDebounceTimeUp = 0;
 unsigned long lastDebounceTimeDown = 0;
 unsigned long lastDebounceTimeEnter = 0;
 unsigned long lastDebounceTimeBack = 0;
-const unsigned long debounceDelay = 300;
+const unsigned long debounceDelay = 250;
 
 // Piscar "Press Enter"
 unsigned long lastBlinkTime = 0;
@@ -71,24 +77,40 @@ MenuItem menuColetorDados[] = {
   {"Biologia (azul)", NULL, 0}
 };
 
-
-
 MenuItem gravacaoCartas[] = {
   {"Robo Rei", NULL, 0},
   {"Coletor de Dados", menuColetorDados, 4},
   {"Educa Nave", NULL, 0}
 };
 
+MenuItem testeSensores[] = {
+  {"Sens. Forca", NULL, 0},
+  {"Sens. Botao", NULL, 0},
+  {"Sens. Gas", NULL, 0},
+  {"Sens. Ultrassonico", NULL, 0},
+  {"Sens. pH", NULL, 0},
+  {"Sens. IR", NULL, 0},
+  {"Sens. Umidade", NULL, 0},
+  {"Laser 650nm", NULL, 0},
+  {"Sens. Temperatura", NULL, 0},
+  {"Sens. Hall", NULL, 0},
+  {"Sens. Decibel", NULL, 0},
+  {"Educa Nave", NULL, 0},
+  {"Educa Nave", NULL, 0},
+  {"Educa Nave", NULL, 0},
+  {"Educa Nave", NULL, 0},
+  {"Educa Nave", NULL, 0}
+};
+
 MenuItem mainMenu[] = {
   {"Gravador RFID", gravacaoCartas, 3},
-  {"Teste Sensores", NULL, 0}
+  {"Teste Sensores", testeSensores, 15}
 };
 
 // Pilha de menus
 MenuItem* menuStack[5];
 int menuSizeStack[5];
 int indexStack[5];
-
 
 void setup() {
   Serial.begin(115200);
@@ -109,7 +131,7 @@ void setup() {
   lcd.setCursor(6, 0);
   lcd.print("CITTIUS");
   lcd.setCursor(3, 1);
-  lcd.print("Gravador RFID");
+  lcd.print("Teste & RFID");
   lcd.setCursor(4, 3);
   lcd.print("Press Enter");
 }
@@ -131,7 +153,7 @@ void loop() {
     if (isButtonPressed(btnEnter, lastDebounceTimeEnter)) {
       showingWelcome = false;
       menuStack[0] = mainMenu;
-      menuSizeStack[0] = 3;
+      menuSizeStack[0] = 2;
       indexStack[0] = 0;
       cursorPosition = 0;
       showMenu();
@@ -175,22 +197,22 @@ void loop() {
     } else {
       const char* title = selected.title;
 
-      if (strcmp(title, "Robo Rei") == 0) {
-        gravacao_rei();
-      }
-      else if (strcmp(title, "Educa Nave") == 0) {
-        gravacao_coletor();
-      }
-      else if (strcmp(title, "Educa Nave") == 0) {
-        gravacao_educanave();
-      }
+      if (strcmp(title, "Robo Rei") == 0) gravacao_rei();
+
+      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor();
+      else if (strcmp(title, "Educa Nave") == 0) gravacao_educanave();
+      else if (strcmp(title, "Sens. Forca") == 0) sensor_forca();
+      else if (strcmp(title, "Sens. Botao") == 0) sensor_botao();
+      else if (strcmp(title, "Sens. Gas") == 0) sensor_gas();
+      else if (strcmp(title, "Sens. Ultrassonico") == 0) sensor_ultrassonico();
+      else if (strcmp(title, "Sens. pH") == 0) sensor_ph();
+      else if (strcmp(title, "Sens. IR") == 0) sensor_IR();
+      else if (strcmp(title, "Sens. Umidade") == 0) sensor_umidade();
+      else if (strcmp(title, "Laser 650nm") == 0) sensor_laser();
+      else if (strcmp(title, "Sens. Temperatura") == 0) sensor_temperatura(); 
+      else if (strcmp(title, "Sens. Hall") == 0) sensor_hall();
 
       lcd.clear();
-      lcd.setCursor(0, 0);
-      //lcd.print("Executando:");
-      //lcd.setCursor(0, 1);
-      //lcd.print(sanitize(title));
-      //delay(1000);
       showMenu();
     }
   }
@@ -205,26 +227,23 @@ void loop() {
 }
 
 void showMenu() {
+ 
   lcd.clear();
   for (int i = 0; i < LCD_ROWS; i++) {
     int itemIndex = indexStack[currentLevel] - cursorPosition + i;
     if (itemIndex >= 0 && itemIndex < menuSizeStack[currentLevel]) {
       lcd.setCursor(0, i);
       lcd.print((i == cursorPosition) ? "> " : "  ");
-      lcd.print(sanitize(menuStack[currentLevel][itemIndex].title));
+      lcd.print(menuStack[currentLevel][itemIndex].title);
     }
   }
 }
 
-String sanitize(const char* input) {
-  String s = input;
-  s.replace("á", "a"); s.replace("à", "a"); s.replace("ã", "a"); s.replace("â", "a");
-  s.replace("é", "e"); s.replace("ê", "e");
-  s.replace("í", "i");
-  s.replace("ó", "o"); s.replace("õ", "o"); s.replace("ô", "o");
-  s.replace("ú", "u");
-  s.replace("ç", "c");
-  return s;
+void __attribute__((noinline)) sair() {   // Limpa linhas quando sai da função
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Retornando ao menu");
+  delay(500);
 }
 
 bool isButtonPressed(int pin, unsigned long &lastTime) {
@@ -236,31 +255,4 @@ bool isButtonPressed(int pin, unsigned long &lastTime) {
     }
   }
   return false;
-}
-
-void executarBaralhoCompleto() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Gravando baralho");
-  lcd.setCursor(0, 1);
-  lcd.print("completo...");
-  delay(2000);
-}
-
-void executarCartaEduca() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Gravando carta");
-  lcd.setCursor(0, 1);
-  lcd.print("Educa Nave...");
-  delay(2000);
-}
-
-void executarAlfabeto() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Gravando letra:");
-  lcd.setCursor(0, 1);
-  lcd.print("A");
-  delay(2000);
 }
