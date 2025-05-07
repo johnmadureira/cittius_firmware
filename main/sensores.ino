@@ -628,4 +628,78 @@ void sensor_correnteSCT() {
   lcd.print("Retornando ao menu");
   delay(500);
 }
+void sensor_MODELO() {
+  lcd.clear();
+  while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
+
+
+
+
+    #include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include "dht.h"
+
+
+
+
+// Instância do sensor
+dht DHT;
+
+// Definição do caractere personalizado para "º"
+byte grau[8] = {
+  0b00110,
+  0b01001,
+  0b01001,
+  0b00110,
+  0b00000,
+  0b00000,
+  0b00000,
+  0b00000
+};
+
+void setup() {
+
+  lcd.init();
+  lcd.backlight();
+  lcd.createChar(0, grau); // Armazena o caractere na posição 0
+  lcd.setCursor(0, 0);
+}
+
+void loop() {
+  DHT.read11(sensorpin_1); // Lê os dados do sensor
+
+  float umidade = DHT.humidity;
+  float temperatura = DHT.temperature;
+
+  // Exibe no LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Sensor DHT11");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Umidade: ");
+  lcd.print(umidade, 0);
+  lcd.print(" %");
+
+  lcd.setCursor(0, 2);
+  lcd.print("Temp: ");
+  lcd.print(temperatura, 0);
+  lcd.write(byte(0));  // Escreve o caractere º
+  lcd.print("C");
+
+  delay(2000); // Aguarda 2 segundos antes da próxima leitura
+}
+
+
+
+
+
+
+   }
+  // Limpa linhas quando sai da função
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Retornando ao menu");
+  delay(500);
+}
 
