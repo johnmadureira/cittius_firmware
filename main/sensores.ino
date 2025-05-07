@@ -580,4 +580,52 @@ void sensor_decibel() {
   lcd.print("Retornando ao menu");
   delay(500);
 }
+void sensor_correnteSCT() {
+  lcd.clear();
+  pinMode(sensorpin_1, INPUT);
+
+  const float referenciaVoltagem = 5.0;
+  const int numAmostras = 1000;
+  const float tensaoOffset = 2.5;
+  const float fatorConversao = 0.185; // A/V
+
+  while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
+
+      float somaQuadrados = 0.0;
+
+      for (int i = 0; i < numAmostras; i++) {
+        int leituraADC = analogRead(sensorpin_1);
+        float tensao = (leituraADC / 1023.0) * referenciaVoltagem;
+        float diferenca = tensao - tensaoOffset;
+        somaQuadrados += diferenca * diferenca;
+      }
+
+      float mediaQuadrados = somaQuadrados / numAmostras;
+      float tensaoRMS = sqrt(mediaQuadrados);
+
+      float corrente = tensaoRMS / fatorConversao;
+
+      // Exibe no LCD
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Tensao RMS:");
+      lcd.setCursor(0, 1);
+      lcd.print(tensaoRMS, 3);
+      lcd.print(" V");
+
+      lcd.setCursor(0, 2);
+      lcd.print("Corrente:");
+      lcd.setCursor(0, 3);
+      lcd.print(corrente, 3);
+      lcd.print(" A");
+
+      delay(1000);
+    
+   }
+  // Limpa linhas quando sai da função
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Retornando ao menu");
+  delay(500);
+}
 

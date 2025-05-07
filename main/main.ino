@@ -101,7 +101,7 @@ MenuItem testeSensores[] = {
   {"Sens. Peltier", NULL, 0},
   {"Sens. PIR", NULL, 0},
   {"Sens. Decibel", NULL, 0},
-  {"Educa Nave", NULL, 0},
+  {"Sens. Corrente SCT", NULL, 0},
   {"Educa Nave", NULL, 0},
   {"Educa Nave", NULL, 0},
   {"Educa Nave", NULL, 0}
@@ -223,6 +223,7 @@ void loop() {
       else if (strcmp(title, "Sens. Peltier") == 0) sensor_peltier();
       else if (strcmp(title, "Sens. PIR") == 0) sensor_pir();
       else if (strcmp(title, "Sens. Decibel") == 0) sensor_decibel();
+      else if (strcmp(title, "Sens. Corrente SCT") == 0) sensor_correnteSCT();
 
       lcd.clear();
       showMenu();
