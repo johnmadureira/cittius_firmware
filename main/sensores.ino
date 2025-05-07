@@ -391,3 +391,193 @@ void sensor_chuva() {
     lcd.print("Retornando ao menu");
     delay(500);
 }
+void sensor_vibracao() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Sensor Vibracao: ");
+
+  unsigned long ultimaVibracao = 0;
+  const unsigned long intervalo = 300; // tempo mínimo entre leituras
+  bool estadoAnterior = false;
+  pinMode(sensorpin_2, INPUT);
+
+  while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
+
+    lcd.setCursor(0, 2);
+    lcd.print("Sem vibracao       ");
+    delay(20);
+
+
+
+    int leitura = digitalRead(sensorpin_2);
+    unsigned long agora = millis();
+
+    if (leitura == HIGH && !estadoAnterior && (agora - ultimaVibracao > intervalo)) {
+      ultimaVibracao = agora;
+      estadoAnterior = true;
+
+      lcd.setCursor(0, 2);
+      lcd.print("Vibracao detectada ");
+      delay(1000);
+    }
+
+    // Quando não há vibração e tempo de silêncio já passou
+    if (leitura == LOW && estadoAnterior && (agora - ultimaVibracao > intervalo)) {
+      estadoAnterior = false;
+
+      lcd.setCursor(0, 2);
+      lcd.print("Sem vibracao       ");
+    }
+
+   }
+  // Limpa linhas quando sai da função
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Retornando ao menu");
+  delay(500);
+}
+void sensor_peltier() {
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Teste Peltier");
+
+  pinMode(sensorpin_2, OUTPUT);
+
+  while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
+
+      // Liga a pastilha
+      digitalWrite(sensorpin_2, HIGH);
+
+      // Contagem regressiva de 10s ligada
+      for (int i = 30; i > 0; i--) {
+        lcd.setCursor(0, 2);
+        lcd.print("Status: ON    ");
+        lcd.setCursor(17, 2);
+        lcd.print("   ");  // Limpa os caracteres antigos
+        lcd.setCursor(17, 2);
+        lcd.print(String(i) + "s");
+        delay(1000);
+      }
+
+      // Desliga a pastilha
+      digitalWrite(sensorpin_2, LOW);
+
+      // Contagem regressiva de 2s desligada
+      for (int i = 2; i > 0; i--) {
+        lcd.setCursor(0, 2);
+        lcd.print("Status: OFF ");
+        lcd.setCursor(17, 2);
+        lcd.print("   ");  // Limpa os caracteres antigos
+        lcd.setCursor(17, 2);
+        lcd.print(String(i) + "s");
+        delay(1000);
+      }
+    
+   }// Limpa linhas quando sai da função
+   
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Retornando ao menu");
+  delay(500);
+}
+void sensor_pir() {
+
+  lcd.clear();
+  while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
+
+    lcd.setCursor(0, 0);
+    lcd.print("Sensor movimento:");
+
+    pinMode(sensorpin_1, INPUT);  // A8 usado como entrada digital
+    int estado = digitalRead(sensorpin_1);
+
+    if (estado == HIGH) {
+      lcd.setCursor(0, 1);
+      lcd.print("Movimento detectado ");
+      delay(500);
+
+    } else {
+      lcd.setCursor(0, 1);
+      lcd.print("Sem movimento       ");
+
+    }
+
+    delay(20);
+
+   }
+  // Limpa linhas quando sai da função
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Retornando ao menu");
+  delay(500);
+}
+void sensor_decibel() {
+
+  lcd.clear();
+  pinMode(sensorpin_1, INPUT);
+  // Caracteres personalizados para barra
+  byte barra0[8] = {B00000,B00000,B00000,B00000,B00000,B00000,B00000,B00000};
+  byte barra1[8] = {B10000,B10000,B10000,B10000,B10000,B10000,B10000,B10000};
+  byte barra2[8] = {B11000,B11000,B11000,B11000,B11000,B11000,B11000,B11000};
+  byte barra3[8] = {B11100,B11100,B11100,B11100,B11100,B11100,B11100,B11100};
+  byte barra4[8] = {B11110,B11110,B11110,B11110,B11110,B11110,B11110,B11110};
+  byte barra5[8] = {B11111,B11111,B11111,B11111,B11111,B11111,B11111,B11111};
+
+  // Criação dos blocos personalizados
+  lcd.createChar(0, barra0);
+  lcd.createChar(1, barra1);
+  lcd.createChar(2, barra2);
+  lcd.createChar(3, barra3);
+  lcd.createChar(4, barra4);
+  lcd.createChar(5, barra5);
+
+  lcd.setCursor(0, 0);
+  lcd.print("Som - Intensidade");
+
+  while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
+
+
+
+      int valorSom = analogRead(sensorpin_1);
+
+      int dbSimulado = map(valorSom, 500, 750, 30, 100);
+      dbSimulado = constrain(dbSimulado, 0, 100);
+
+      // Total de blocos: 20 colunas, cada uma com 5 níveis
+      int totalBlocos = map(dbSimulado, 30, 100, 0, 100); // escala 0 a 100
+      int colunas = totalBlocos / 5;
+      int resto = totalBlocos % 5;
+
+      lcd.setCursor(0, 2);
+      for (int i = 0; i < 20; i++) {
+        if (i < colunas) {
+          lcd.write(byte(5));  // cheio
+        } else if (i == colunas && resto > 0) {
+          lcd.write(byte(resto));  // parcial
+        } else {
+          lcd.write(byte(0));  // vazio
+        }
+      }
+
+      lcd.setCursor(0, 1);
+      lcd.print("Nivel: ");
+      lcd.print(dbSimulado);
+      lcd.print(" dB   ");
+
+      Serial.print("Valor A0: ");
+      Serial.print(valorSom);
+      Serial.print(" => ");
+      Serial.print(dbSimulado);
+      Serial.println(" dB");
+
+      delay(150);
+
+   }
+  // Limpa linhas quando sai da função
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Retornando ao menu");
+  delay(500);
+}
+

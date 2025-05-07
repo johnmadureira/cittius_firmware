@@ -96,16 +96,21 @@ MenuItem testeSensores[] = {
   {"Sens. Temperatura", NULL, 0},
   {"Sens. Hall", NULL, 0},
   {"Sens. Chuva", NULL, 0},
-  {"Sens. RFID FAZER", NULL, 0},
+  //{"Sens. RFID FAZER", NULL, 0},
+  {"Sens. Vibracao", NULL, 0},
+  {"Sens. Peltier", NULL, 0},
+  {"Sens. PIR", NULL, 0},
+  {"Sens. Decibel", NULL, 0},
   {"Educa Nave", NULL, 0},
   {"Educa Nave", NULL, 0},
   {"Educa Nave", NULL, 0},
   {"Educa Nave", NULL, 0}
+
 };
 
 MenuItem mainMenu[] = {
   {"Gravador RFID", gravacaoCartas, 3},
-  {"Teste Sensores", testeSensores, 15}
+  {"Teste Sensores", testeSensores, 20}
 };
 
 // Pilha de menus
@@ -213,7 +218,11 @@ void loop() {
       else if (strcmp(title, "Sens. Temperatura") == 0) sensor_temperatura(); 
       else if (strcmp(title, "Sens. Hall") == 0) sensor_hall(); 
       else if (strcmp(title, "Sens. Chuva") == 0) sensor_chuva();
-       else if (strcmp(title, "Sens. RFID") == 0) sensor_rfid();
+    //else if (strcmp(title, "Sens. RFID") == 0) sensor_rfid();
+      else if (strcmp(title, "Sens. Vibracao") == 0) sensor_vibracao();
+      else if (strcmp(title, "Sens. Peltier") == 0) sensor_peltier();
+      else if (strcmp(title, "Sens. PIR") == 0) sensor_pir();
+      else if (strcmp(title, "Sens. Decibel") == 0) sensor_decibel();
 
       lcd.clear();
       showMenu();
