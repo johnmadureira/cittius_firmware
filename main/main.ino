@@ -15,6 +15,7 @@
 #include <SPI.h>
 #include <NewTone.h>
 #include <DallasTemperature.h>
+#include <MFRC522.h>
 
 
 // Pinos e definições
@@ -94,8 +95,8 @@ MenuItem testeSensores[] = {
   {"Laser 650nm", NULL, 0},
   {"Sens. Temperatura", NULL, 0},
   {"Sens. Hall", NULL, 0},
-  {"Sens. Decibel", NULL, 0},
-  {"Educa Nave", NULL, 0},
+  {"Sens. Chuva", NULL, 0},
+  {"Sens. RFID FAZER", NULL, 0},
   {"Educa Nave", NULL, 0},
   {"Educa Nave", NULL, 0},
   {"Educa Nave", NULL, 0},
@@ -210,7 +211,9 @@ void loop() {
       else if (strcmp(title, "Sens. Umidade") == 0) sensor_umidade();
       else if (strcmp(title, "Laser 650nm") == 0) sensor_laser();
       else if (strcmp(title, "Sens. Temperatura") == 0) sensor_temperatura(); 
-      else if (strcmp(title, "Sens. Hall") == 0) sensor_hall();
+      else if (strcmp(title, "Sens. Hall") == 0) sensor_hall(); 
+      else if (strcmp(title, "Sens. Chuva") == 0) sensor_chuva();
+       else if (strcmp(title, "Sens. RFID") == 0) sensor_rfid();
 
       lcd.clear();
       showMenu();

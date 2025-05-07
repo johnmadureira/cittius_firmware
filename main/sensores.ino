@@ -355,6 +355,39 @@ void sensor_hall() {
   lcd.print("Retornando ao menu");
   delay(500);
 }
+void sensor_chuva() {
+  lcd.clear();
+  while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
+    pinMode(sensorpin_2, INPUT);
 
+    int valorAnalogico = analogRead(sensorpin_1);
+    int estadoChuva = digitalRead(sensorpin_2);
+    int umidade = map(valorAnalogico, 1023, 0, 0, 100); // Converte para umidade percentual aproximada
 
+    // Exibe os dados no LCD
+    lcd.setCursor(0, 0);
+    lcd.print("Umidade: ");
+    lcd.print(umidade);
+    lcd.print(" %     ");
+    lcd.setCursor(0, 1);
+    lcd.print("Estado: ");
+    if (estadoChuva == LOW) lcd.print("Chovendo     ");
+    else lcd.print("Seco              ");
+    
+    // Exibe no Serial Monitor
+    Serial.print("Valor analogico: ");
+    Serial.print(valorAnalogico);
+    Serial.print(" | Umidade: ");
+    Serial.print(umidade);
+    Serial.print("% | Estado Digital: ");
+    Serial.println(estadoChuva == LOW ? "CHUVA" : "SECO");
+
+    delay(500);
+   }
+    // Limpa linhas quando sai da função
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Retornando ao menu");
+    delay(500);
+}
