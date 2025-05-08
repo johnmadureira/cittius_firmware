@@ -1,5 +1,5 @@
 // Dicionário: valor a ser gravado => nome da carta (exibido apenas)
-const char* coletor_dados[][2] = {
+const char* coletor_dados_mat[][2] = {
   {"A", "A"},               
   {"B", "B"},
   {"C", "C"},
@@ -67,16 +67,16 @@ const char* coletor_dados[][2] = {
   {"T", "Triste"},
   {"S", "Surpresa"}
 };
-const int totalCartoes_dados = sizeof(coletor_dados) / sizeof(coletor_dados[0]);
+const int totalCartoes_dadosmat = sizeof(coletor_dados_mat) / sizeof(coletor_dados_mat[0]);
 
 
 void gravacao_coletor_mat() {
   int i = 0;
   unsigned long backPressStart = 0;
 
-  while (i < totalCartoes_dados) {
-    const char* valor = coletor_dados[i][0];
-    const char* nome = coletor_dados[i][1];
+  while (i < totalCartoes_dadosmat) {
+    const char* valor = coletor_dados_mat[i][0];
+    const char* nome = coletor_dados_mat[i][1];
 
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -88,7 +88,7 @@ void gravacao_coletor_mat() {
     while (!sucesso) {
       // Verifica botoes
       if (digitalRead(38) == LOW) {  // Baixo - avança
-        i = min(i + 1, totalCartoes_dados - 1);
+        i = min(i + 1, totalCartoes_dadosmat - 1);
         delay(300);
         break;
       }

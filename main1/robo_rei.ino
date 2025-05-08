@@ -1,82 +1,90 @@
-// Dicionário: valor a ser gravado => nome da carta (exibido apenas)
-const char* coletor_dados_bio[][2] = {
-  {"A", "A"},               
-  {"B", "B"},
-  {"C", "C"},
-  {"D", "D"},
-  {"E", "E"},
-  {"F", "F"},
-  {"G", "G"},
-  {"H", "H"},
-  {"I", "I"},
-  {"J", "J"},
-  {"K", "K"},
-  {"L", "L"},
-  {"M", "M"}, 
-  {"N", "N"},
-  {"O", "O"},
-  {"P", "P"},
-  {"Q", "Q"},
-  {"R", "R"},
-  {"S", "S"},
-  {"T", "T"},
-  {"U", "U"},
-  {"V", "V"},
-  {"W", "W"},
-  {"X", "X"},
-  {"Y", "Y"},
-  {"Z", "Z"},
-  {"0", "0"},
-  {"1", "1"},
-  {"2", "2"},
-  {"3", "3"},
-  {"4", "4"},
-  {"5", "5"},
-  {"6", "6"},
-  {"7", "7"},
-  {"8", "8"},
-  {"9", "9"},
-  {"D", "Direita"},
-  {"A", "Esquerda"},
-  {"W", "Cima"},
-  {"S", "Baixo"},
-  {"DGDGDG", "Direita 3x"},
-  {"AGAGAG", "Esquerda 3x"},
-  {"WGWGWG", "Cima 3x"},
-  {"SGSGSG", "Baixo 3x"},
-  {"Q", "Do"},
-  {"W", "Re"},
-  {"E", "Mi"},
-  {"R", "Fa"},
-  {"T", "Sol"},
-  {"Y", "La"},
-  {"U", "Si"},
-  {"1", "Piano"},
-  {"2", "Harpa"},
-  {"3", "Flauta"},
-  {"E", "Azul"},
-  {"Q", "Amarelo"},
-  {"R", "Vermelho"},
-  {"T", "Verde"},
-  {"W", "Marrom"},
-  {"Y", "Cinza"},
-  {"M", "Medo"},
-  {"A", "Feliz"},
-  {"N", "Nojo"},
-  {"R", "Raiva"},
-  {"T", "Triste"},
-  {"S", "Surpresa"}
+// Estrutura da carta com valor e nome
+struct Carta {
+  uint8_t valor;
+  const char* nome;
 };
-const int totalCartoes_dadosbio = sizeof(coletor_dados_bio) / sizeof(coletor_dados_bio[0]);
 
+// Dicionário: valor a ser gravado => nome da carta (exibido apenas)
+const Carta roboRei[] = {
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x02, "Mover frente"},
+  {0x06, "Girar tras"},
+  {0x06, "Girar tras"},
+  {0x06, "Girar tras"},
+  {0x03, "Mover tras"},
+  {0x03, "Mover tras"},
+  {0x03, "Mover tras"},
+  {0x03, "Mover tras"},
+  {0x03, "Mover tras"},
+  {0x04, "Girar direita"},
+  {0x04, "Girar direita"},
+  {0x04, "Girar direita"},
+  {0x04, "Girar direita"},
+  {0x04, "Girar direita"},
+  {0x05, "Esquerda esquerda"},
+  {0x05, "Esquerda esquerda"},
+  {0x05, "Esquerda esquerda"},
+  {0x05, "Esquerda esquerda"},
+  {0x05, "Esquerda esquerda"},
+  {0x07, "Acao 2x"},
+  {0x07, "Acao 2x"},
+  {0x07, "Acao 2x"},
+  {0x07, "Acao 2x"},
+  {0x07, "Acao 2x"},
+  {0x08, "Acao 3x"},
+  {0x08, "Acao 3x"},
+  {0x08, "Acao 3x"},
+  {0x08, "Acao 3x"},
+  {0x08, "Acao 3x"},
+  {0x09, "Acao 4x"},
+  {0x09, "Acao 4x"},
+  {0x09, "Acao 4x"},
+  {0x09, "Acao 4x"},
+  {0x09, "Acao 4x"},
+  {0x0A, "3 Segundos"},
+  {0x0A, "3 Segundos"},
+  {0x0A, "3 Segundos"},
+  {0x0B, "5 Segundos"},
+  {0x0B, "5 Segundos"},
+  {0x0B, "5 Segundos"},
+  {0x0B, "5 Segundos"},
+  {0x13, "Som loop"},
+  {0x13, "Som loop"},
+  {0x0C, "Musica 1"},
+  {0x0D, "Musica 2"},
+  {0x0E, "Musica 3"},
+  {0x0F, "Musica 4"},
+  {0x10, "Musica 5"},
+  {0x11, "Musica 6"},
+  {0x12, "Som acerto"},
+  {0x12, "Som acerto"},
+  {0x12, "Som acerto"},
+  {0x12, "Som acerto"},
+  {0x12, "Som acerto"},
+  {0x12, "Som acerto"},
+  {0x01, "Carta Inicio"},
+  {0xFE, "Carta fim"}
+};
 
-void gravacao_coletor_bio() {
+const int totalCartoes = sizeof(roboRei) / sizeof(roboRei[0]);
+
+void gravacao_rei() {
   int i = 0;
   unsigned long backPressStart = 0;
 
-  while (i < totalCartoes_dadosbio) {
-    const char* valor = coletor_dados_bio[i][0];
-    const char* nome = coletor_dados_bio[i][1];
+  while (i < totalCartoes) {
+    uint8_t valor = roboRei[i].valor;
+    const char* nome = roboRei[i].nome;
 
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -88,7 +96,7 @@ void gravacao_coletor_bio() {
     while (!sucesso) {
       // Verifica botoes
       if (digitalRead(38) == LOW) {  // Baixo - avança
-        i = min(i + 1, totalCartoes_dadosbio - 1);
+        i = min(i + 1, totalCartoes - 1);
         delay(300);
         break;
       }
@@ -126,8 +134,7 @@ void gravacao_coletor_bio() {
       // Prepara dados
       byte buffer[16];
       memset(buffer, 0x00, 16);
-      int len = strlen(valor);
-      memcpy(buffer, valor, min(16, len));
+      buffer[0] = valor;  // grava apenas 1 byte representando a carta
 
       // Autentica
       MFRC522::MIFARE_Key key;
@@ -135,7 +142,7 @@ void gravacao_coletor_bio() {
 
       MFRC522::StatusCode status = rfid.PCD_Authenticate(
         MFRC522::PICC_CMD_MF_AUTH_KEY_A,
-        BLOCO_GRAVACAO_COLETOR,
+        BLOCO_GRAVACAO_REI,
         &key,
         &(rfid.uid)
       );
@@ -151,7 +158,7 @@ void gravacao_coletor_bio() {
       }
 
       // Grava
-      status = rfid.MIFARE_Write(BLOCO_GRAVACAO_COLETOR, buffer, 16);
+      status = rfid.MIFARE_Write(BLOCO_GRAVACAO_REI, buffer, 16);
       if (status != MFRC522::STATUS_OK) {
         lcd.setCursor(0, 3);
         lcd.print("Falha na gravacao ");
@@ -165,7 +172,7 @@ void gravacao_coletor_bio() {
       // Verifica gravação
       byte leitura[18];
       byte tamanho = 18;
-      status = rfid.MIFARE_Read(BLOCO_GRAVACAO_COLETOR, leitura, &tamanho);
+      status = rfid.MIFARE_Read(BLOCO_GRAVACAO_REI, leitura, &tamanho);
       if (status != MFRC522::STATUS_OK) {
         lcd.setCursor(0, 3);
         lcd.print("Erro leitura check ");
@@ -202,5 +209,14 @@ void gravacao_coletor_bio() {
   delay(2000);
 }
 
+void beepSucesso() {
+  NewTone(BUZZER_PIN, 1000, 200);  // Som de sucesso
+  delay(200);
+}
 
-
+void beepErro() {
+  for (int i = 0; i < 2; i++) {
+    NewTone(BUZZER_PIN, 400, 150);  // Som de erro
+    delay(200);
+  }
+}

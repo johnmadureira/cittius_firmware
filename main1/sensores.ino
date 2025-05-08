@@ -143,9 +143,9 @@ void sensor_ultrassonico() {
     float distance = duration * 0.034 / 2;
 
     // Exibe no Serial
-    //Serial.print("Distancia: ");
-    //Serial.print(distance);
-    //Serial.println(" cm");
+    Serial.print("Distancia: ");
+    Serial.print(distance);
+    Serial.println(" cm");
 
     // Exibe no LCD
     lcd.setCursor(0, 1);
@@ -249,11 +249,11 @@ void sensor_umidadeSolo() {
     lcd.print(umidadePercentual);
     lcd.print(" %     "); // Espaços extras para evitar "ghosting"
 
-    //.print("Valor analogico: ");
-    //Serial.print(leitura);
-    //Serial.print(" -> Umidade: ");
-    //Serial.print(umidadePercentual);
-    //Serial.println(" %");
+    Serial.print("Valor analogico: ");
+    Serial.print(leitura);
+    Serial.print(" -> Umidade: ");
+    Serial.print(umidadePercentual);
+    Serial.println(" %");
 
     delay(500);
 
@@ -376,12 +376,12 @@ void sensor_chuva() {
     else lcd.print("Seco              ");
     
     // Exibe no Serial Monitor
-    //Serial.print("Valor analogico: ");
-    //Serial.print(valorAnalogico);
-    //Serial.print(" | Umidade: ");
-    //Serial.print(umidade);
-    //Serial.print("% | Estado Digital: ");
-    //Serial.println(estadoChuva == LOW ? "CHUVA" : "SECO");
+    Serial.print("Valor analogico: ");
+    Serial.print(valorAnalogico);
+    Serial.print(" | Umidade: ");
+    Serial.print(umidade);
+    Serial.print("% | Estado Digital: ");
+    Serial.println(estadoChuva == LOW ? "CHUVA" : "SECO");
 
     delay(500);
    }
@@ -565,11 +565,11 @@ void sensor_decibel() {
       lcd.print(dbSimulado);
       lcd.print(" dB   ");
 
-      //Serial.print("Valor A0: ");
-      //Serial.print(valorSom);
-      //Serial.print(" => ");
-      //Serial.print(dbSimulado);
-      //Serial.println(" dB");
+      Serial.print("Valor A0: ");
+      Serial.print(valorSom);
+      Serial.print(" => ");
+      Serial.print(dbSimulado);
+      Serial.println(" dB");
 
       delay(150);
 
@@ -678,50 +678,45 @@ void sensor_umidaderel() {
   lcd.print("Retornando ao menu");
   delay(500);
 }
-
-
 void sensor_RFID() {
   lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Aproxime o cartao");
+  while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
-  while (digitalRead(btnBack) == HIGH) {  // Loop até o botão Back ser pressionado
 
-    // Espera por novo cartão
-    if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print(" Cartao Detectado ");
-
-      lcd.setCursor(0, 2);
-      lcd.print("UID: ");
-      for (byte i = 0; i < rfid.uid.size; i++) {
-        lcd.print(rfid.uid.uidByte[i] < 0x10 ? "0" : "");
-        lcd.print(rfid.uid.uidByte[i], HEX);
-      }
-
-      tone(BUZZER_PIN, 1000, 200);
-      delay(300);  // Tempo para o usuário visualizar
-
-      rfid.PICC_HaltA();
-      rfid.PCD_StopCrypto1();
-
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Aproxime o cartao");
-
-      // Aguarda o cartão ser removido antes de continuar lendo
-      while (rfid.PICC_IsNewCardPresent() || rfid.PICC_ReadCardSerial()) {
-        delay(100);
-      }
+    if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) {
+      return;
     }
 
-    delay(20); // Pequeno delay para evitar loop muito rápido
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(" Cartao Detectado ");
+
+    lcd.setCursor(0, 2);
+    lcd.print("UID: ");
+    for (byte i = 0; i < rfid.uid.size; i++) {
+      lcd.print(rfid.uid.uidByte[i] < 0x10 ? "0" : "");
+      lcd.print(rfid.uid.uidByte[i], HEX);
+    }
+
+    tone(buzzerPin, 1000, 200);
+    delay(2000);
+
+    rfid.PICC_HaltA();
+    rfid.PCD_StopCrypto1();
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Aproxime o cartao ");
   }
 
-  // Mensagem de saída
+
+
+
+
+   }
+  // Limpa linhas quando sai da função
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Retornando ao menu");
-  delay(1000);
+  delay(500);
 }

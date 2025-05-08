@@ -104,7 +104,7 @@ MenuItem testeSensores[] = {
   {"Sens. Decibel", NULL, 0},
   {"Sens. Corrente SCT", NULL, 0},
   {"Sens. Umi Rel/Temp", NULL, 0},
-  {"Sens. RFID", NULL, 0},
+  {"Educa Nave", NULL, 0},
   {"Educa Nave", NULL, 0}
 
 };
@@ -120,7 +120,7 @@ int menuSizeStack[5];
 int indexStack[5];
 
 void setup() {
-  //Serial.begin(115200);
+  Serial.begin(115200);
   SPI.begin();
   rfid.PCD_Init();
   pinMode(BUZZER_PIN, OUTPUT);
@@ -229,7 +229,6 @@ void loop() {
       else if (strcmp(title, "Sens. Decibel") == 0) sensor_decibel();
       else if (strcmp(title, "Sens. Corrente SCT") == 0) sensor_correnteSCT();
       else if (strcmp(title, "Sens. Umi Rel/Temp") == 0) sensor_umidaderel();
-      else if (strcmp(title, "Sens. RFID") == 0) sensor_RFID();
 
       lcd.clear();
       showMenu();

@@ -1,5 +1,5 @@
 // Dicionário: valor a ser gravado => nome da carta (exibido apenas)
-const char* coletor_dados_bio[][2] = {
+const char* educa_nave[][2] = {
   {"A", "A"},               
   {"B", "B"},
   {"C", "C"},
@@ -67,16 +67,16 @@ const char* coletor_dados_bio[][2] = {
   {"T", "Triste"},
   {"S", "Surpresa"}
 };
-const int totalCartoes_dadosbio = sizeof(coletor_dados_bio) / sizeof(coletor_dados_bio[0]);
+const int totalCartoes_educa = sizeof(educa_nave) / sizeof(educa_nave[0]);
 
 
-void gravacao_coletor_bio() {
+void gravacao_educanave() {
   int i = 0;
   unsigned long backPressStart = 0;
 
-  while (i < totalCartoes_dadosbio) {
-    const char* valor = coletor_dados_bio[i][0];
-    const char* nome = coletor_dados_bio[i][1];
+  while (i < totalCartoes_educa) {
+    const char* valor = educa_nave[i][0];
+    const char* nome = educa_nave[i][1];
 
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -88,7 +88,7 @@ void gravacao_coletor_bio() {
     while (!sucesso) {
       // Verifica botoes
       if (digitalRead(38) == LOW) {  // Baixo - avança
-        i = min(i + 1, totalCartoes_dadosbio - 1);
+        i = min(i + 1, totalCartoes_educa - 1);
         delay(300);
         break;
       }
@@ -135,7 +135,7 @@ void gravacao_coletor_bio() {
 
       MFRC522::StatusCode status = rfid.PCD_Authenticate(
         MFRC522::PICC_CMD_MF_AUTH_KEY_A,
-        BLOCO_GRAVACAO_COLETOR,
+        BLOCO_GRAVACAO_EDUCA,
         &key,
         &(rfid.uid)
       );
@@ -151,7 +151,7 @@ void gravacao_coletor_bio() {
       }
 
       // Grava
-      status = rfid.MIFARE_Write(BLOCO_GRAVACAO_COLETOR, buffer, 16);
+      status = rfid.MIFARE_Write(BLOCO_GRAVACAO_EDUCA, buffer, 16);
       if (status != MFRC522::STATUS_OK) {
         lcd.setCursor(0, 3);
         lcd.print("Falha na gravacao ");
@@ -165,7 +165,7 @@ void gravacao_coletor_bio() {
       // Verifica gravação
       byte leitura[18];
       byte tamanho = 18;
-      status = rfid.MIFARE_Read(BLOCO_GRAVACAO_COLETOR, leitura, &tamanho);
+      status = rfid.MIFARE_Read(BLOCO_GRAVACAO_EDUCA, leitura, &tamanho);
       if (status != MFRC522::STATUS_OK) {
         lcd.setCursor(0, 3);
         lcd.print("Erro leitura check ");
@@ -201,6 +201,3 @@ void gravacao_coletor_bio() {
   lcd.print(" Todos gravados! ");
   delay(2000);
 }
-
-
-
