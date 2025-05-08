@@ -16,6 +16,7 @@
 #include <NewTone.h>
 #include <DallasTemperature.h>
 #include <MFRC522.h>
+#include <dht.h>
 
 
 // Pinos e definições
@@ -213,7 +214,7 @@ void loop() {
       else if (strcmp(title, "Sens. Ultrassonico") == 0) sensor_ultrassonico();
       else if (strcmp(title, "Sens. pH") == 0) sensor_ph();
       else if (strcmp(title, "Sens. IR") == 0) sensor_IR();
-      else if (strcmp(title, "Sens. Umidade") == 0) sensor_umidade();
+      else if (strcmp(title, "Sens. Umidade Solo") == 0) sensor_umidadeSolo();
       else if (strcmp(title, "Laser 650nm") == 0) sensor_laser();
       else if (strcmp(title, "Sens. Temperatura") == 0) sensor_temperatura(); 
       else if (strcmp(title, "Sens. Hall") == 0) sensor_hall(); 
