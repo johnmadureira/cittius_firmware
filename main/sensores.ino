@@ -21,15 +21,15 @@ void sensor_forca() {
 
     // Define mensagem com base na força
     lcd.setCursor(0, 0);
-    if (valor < 5) {
-      lcd.print("Sensor forca FSR50N ");
-    } else if (valor < 350) {
-      lcd.print("Senti nada aqui     ");
-    } else if (valor < 600) {
-      lcd.print("Ja abre um pote...  ");
-    } else {
-      lcd.print("Calma, Hulk!        ");
-    }
+    //if (valor < 5) {
+    lcd.print("Sensor forca FSR50N ");
+    //} else if (valor < 350) {
+    //  lcd.print("Senti nada aqui     ");
+    //} else if (valor < 600) {
+    //  lcd.print("Ja abre um pote...  ");
+    //} else {
+     // lcd.print("Calma, Hulk!        ");
+    //}
 
     // Exibe valor numérico
     lcd.setCursor(0, 2);
