@@ -70,7 +70,7 @@ const char* coletor_dados[][2] = {
 const int totalCartoes_dados = sizeof(coletor_dados) / sizeof(coletor_dados[0]);
 
 
-void gravacao_coletor() {
+void gravacao_coletor_mat() {
   int i = 0;
   unsigned long backPressStart = 0;
 

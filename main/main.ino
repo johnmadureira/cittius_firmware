@@ -206,7 +206,10 @@ void loop() {
 
       if (strcmp(title, "Robo Rei") == 0) gravacao_rei();
 
-      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor();
+      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor_fis();
+      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor_mat();
+      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor_quim();
+      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor_bio();
       else if (strcmp(title, "Educa Nave") == 0) gravacao_educanave();
       else if (strcmp(title, "Sens. Forca") == 0) sensor_forca();
       else if (strcmp(title, "Sens. Botao") == 0) sensor_botao();
