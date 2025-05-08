@@ -3,8 +3,8 @@
 # Nome do Desenvolvedor: João Victor Madureira de Oliveira Almeida
 # Data de Criação: 04/04/2025
 # Descrição: Este módulo implementa a função de gravador RFID com dicionário pré estabelecido
-# Última Modificação: 16/04/2025
-# Versão: 0.6
+# Última Modificação: 08/04/2025
+# Versão: 1.4
 # ==============================================================================
 */
 
