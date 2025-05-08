@@ -628,7 +628,7 @@ void sensor_correnteSCT() {
   lcd.print("Retornando ao menu");
   delay(500);
 }
-void sensor_MODELO() {
+void sensor_umidaderel() {
   lcd.clear();
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
