@@ -8,6 +8,8 @@
 # ==============================================================================
 */
 
+extern "C" void init_buttons();
+
 #include <Wire.h>
 #include <OneWire.h>
 #include <LiquidCrystal_I2C.h>
@@ -80,34 +82,33 @@ MenuItem menuColetorDados[] = {
 };
 
 MenuItem gravacaoCartas[] = {
-  {"Robo Rei", NULL, 0},
   {"Coletor de Dados", menuColetorDados, 4},
-  {"Educa Nave", NULL, 0}
+  {"Educa Nave", NULL, 0},
+  {"Robo Rei", NULL, 0}
 };
 
 MenuItem testeSensores[] = {
-  {"Sens. Forca", NULL, 0},
-  {"Sens. Botao", NULL, 0},
-  {"Sens. Gas", NULL, 0},
-  {"Sens. Ultrassonico", NULL, 0},
-  {"Sens. pH", NULL, 0},
-  {"Sens. IR", NULL, 0},
-  {"Sens. Umidade", NULL, 0},
+  {"Educa Nave", NULL, 0},
   {"Laser 650nm", NULL, 0},
-  {"Sens. Temperatura", NULL, 0},
-  {"Sens. Hall", NULL, 0},
+  {"Sens. Botao", NULL, 0},
   {"Sens. Chuva", NULL, 0},
-  //{"Sens. RFID FAZER", NULL, 0},
-  {"Sens. Vibracao", NULL, 0},
+  {"Sens. Corrente SCT", NULL, 0},
+  {"Sens. Decibel", NULL, 0},
+  {"Sens. Forca", NULL, 0},
+  {"Sens. Gas", NULL, 0},
+  {"Sens. Hall", NULL, 0},
+  {"Sens. IR", NULL, 0},
   {"Sens. Peltier", NULL, 0},
   {"Sens. PIR", NULL, 0},
-  {"Sens. Decibel", NULL, 0},
-  {"Sens. Corrente SCT", NULL, 0},
-  {"Sens. Umi Rel/Temp", NULL, 0},
   {"Sens. RFID", NULL, 0},
-  {"Educa Nave", NULL, 0}
-
+  {"Sens. Temperatura", NULL, 0},
+  {"Sens. Umidade", NULL, 0},
+  {"Sens. Umi Rel/Temp", NULL, 0},
+  {"Sens. Ultrassonico", NULL, 0},
+  {"Sens. Vibracao", NULL, 0},
+  {"Sens. pH", NULL, 0}
 };
+
 
 MenuItem mainMenu[] = {
   {"Gravador RFID", gravacaoCartas, 3},
@@ -128,10 +129,11 @@ void setup() {
   lcd.init();
   lcd.backlight();
 
-  pinMode(btnUp, INPUT_PULLUP);
-  pinMode(btnDown, INPUT_PULLUP);
-  pinMode(btnEnter, INPUT_PULLUP);
-  pinMode(btnBack, INPUT_PULLUP);
+  init_buttons();  // Chama a função em Assembly
+  //pinMode(btnUp, INPUT_PULLUP);
+  //pinMode(btnDown, INPUT_PULLUP);
+  //pinMode(btnEnter, INPUT_PULLUP);
+  //pinMode(btnBack, INPUT_PULLUP);
 
   // Mostra tela de boas-vindas
   lcd.clear();
@@ -206,10 +208,10 @@ void loop() {
 
       if (strcmp(title, "Robo Rei") == 0) gravacao_rei();
 
-      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor_fis();
-      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor_mat();
-      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor_quim();
-      else if (strcmp(title, "Coletor de Dados") == 0) gravacao_coletor_bio();
+      else if (strcmp(title, "Fisica (laranja)") == 0) gravacao_coletor_fis();
+      else if (strcmp(title, "Matematica (verm.)") == 0) gravacao_coletor_mat();
+      else if (strcmp(title, "Quimica (verde)") == 0) gravacao_coletor_quim();
+      else if (strcmp(title, "Biologia (azul)") == 0) gravacao_coletor_bio();
       else if (strcmp(title, "Educa Nave") == 0) gravacao_educanave();
       else if (strcmp(title, "Sens. Forca") == 0) sensor_forca();
       else if (strcmp(title, "Sens. Botao") == 0) sensor_botao();
