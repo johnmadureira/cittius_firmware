@@ -1,4 +1,3 @@
----
 # Gravador RFID e Teste de Sensores
 
 **Desenvolvedor:** João Victor Madureira de Oliveira Almeida
