@@ -8,7 +8,7 @@
 # ==============================================================================
 */
 
-extern "C" void init_buttons(); //Chama o assembly
+extern "C" void init_buttons(); // Chama o assembly
 
 #include <Wire.h>
 #include <OneWire.h>
@@ -27,9 +27,9 @@ extern "C" void init_buttons(); //Chama o assembly
 #define BUZZER_PIN 26
 
 
-#define BLOCO_GRAVACAO_EDUCA 1  // bloco 4 do setor 1 (correto)
-#define BLOCO_GRAVACAO_COLETOR 1  // bloco 4 do setor 1 (correto)
-#define BLOCO_GRAVACAO_REI 1  // bloco 4 do setor 1 (correto)
+#define BLOCO_GRAVACAO_EDUCA 1  // bloco 4 do setor 1
+#define BLOCO_GRAVACAO_COLETOR 1  // bloco 4 do setor 1
+#define BLOCO_GRAVACAO_REI 1  // bloco 4 do setor 1
 
 // Instanciação dos objetos
 MFRC522 rfid(SS_PIN, RST_PIN);
