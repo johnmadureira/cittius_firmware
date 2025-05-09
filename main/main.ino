@@ -2,13 +2,13 @@
 # ==============================================================================
 # Nome do Desenvolvedor: João Victor Madureira de Oliveira Almeida
 # Data de Criação: 04/04/2025
-# Descrição: Este módulo implementa a função de gravador RFID com dicionário pré estabelecido
-# Última Modificação: 08/04/2025
+# Descrição: Este módulo implementa a função de gravador RFID com dicionário pré estabelecido, e teste dos sensores. Exceto os sensores I²C
+# Última Modificação: 09/05/2025
 # Versão: 1.4
 # ==============================================================================
 */
 
-extern "C" void init_buttons();
+extern "C" void init_buttons(); //Chama o assembly
 
 #include <Wire.h>
 #include <OneWire.h>
