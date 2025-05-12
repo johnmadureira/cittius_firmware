@@ -36,14 +36,30 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 
-// Pinos dos botões
+// Portas dos botões
 const byte btnUp = 47;
 const byte btnDown = 38;
 const byte btnEnter = 49;
 const byte btnBack = 48;
 
-const byte sensorpin_1 = 62;
+//-------------Portas RJ11
+
+const byte sensorpin_1 = 62; // A8
 const byte sensorpin_2 = 2;
+
+// M1
+const byte M2_A = 62; // A8
+const byte M2_D = 2;
+// M2
+const byte M2_A = 63; // A9
+const byte M2_D = 3;
+// M3
+const byte M3_A = 64; // A10
+const byte M3_D = 18;
+// M4
+const byte M4_A = 65; // A11
+const byte M4_D = 19;
+
 
 // Controle de menu
 byte currentMenuIndex = 0;
@@ -124,16 +140,17 @@ void setup() {
   //Serial.begin(115200);
   SPI.begin();
   rfid.PCD_Init();
-  pinMode(BUZZER_PIN, OUTPUT);
+  
 
   lcd.init();
   lcd.backlight();
 
-  init_buttons();  // Chama a função em Assembly
+  init_buttons();  // Chama a função em Assembly que define pinMode
   //pinMode(btnUp, INPUT_PULLUP);
   //pinMode(btnDown, INPUT_PULLUP);
   //pinMode(btnEnter, INPUT_PULLUP);
   //pinMode(btnBack, INPUT_PULLUP);
+  //pinMode(BUZZER_PIN, OUTPUT);
 
   // Mostra tela de boas-vindas
   lcd.clear();

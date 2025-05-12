@@ -1,6 +1,22 @@
-// sensorpin_1 = 62 ou A8
-// sensorpin_2 = 2
-/*
+/* 
+  sensorpin_1 = 62 ou A8
+  sensorpin_2 = 2
+
+
+// M1
+const byte M1_A = 62; // A8
+const byte M1_D = 2;
+// M2
+const byte M2_A = 63; // A9
+const byte M2_D = 3;
+// M3
+const byte M3_A = 64; // A10
+const byte M3_D = 18;
+// M4
+const byte M4_A = 65; // A11
+const byte M4_D = 19;
+
+
 void sensor_MODELO() {
   lcd.clear();
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
@@ -10,7 +26,9 @@ void sensor_MODELO() {
   lcd.setCursor(0, 0);
   lcd.print("Retornando ao menu");
   delay(500);
-}*/
+}
+*/
+
 void sensor_forca() {
 
   lcd.clear();
@@ -678,8 +696,6 @@ void sensor_umidaderel() {
   lcd.print("Retornando ao menu");
   delay(500);
 }
-
-
 void sensor_RFID() {
   lcd.clear();
   lcd.setCursor(0, 0);

@@ -14,4 +14,9 @@ init_buttons:
     ori r16, 0xF0
     sts 0x2B, r16
 
+    ; Configura pino 26 (PORTA bit 4) como saída
+    lds r16, 0x21       ; 0x21 = DDRA
+    ori r16, (1 << 4)   ; seta bit 4 como saída
+    sts 0x21, r16
+
     ret
