@@ -20,13 +20,12 @@ extern "C" void init_buttons(); // Chama o assembly
 #include <MFRC522.h>
 #include <dht.h>
 
-
 // Pinos e definições
 #define SS_PIN  42
 #define RST_PIN 255 // não utilizado
 #define BUZZER_PIN 26
 
-
+// Blocos onde vai ser a gravação dos cartões
 #define BLOCO_GRAVACAO_EDUCA 1  // bloco 4 do setor 1
 #define BLOCO_GRAVACAO_COLETOR 1  // bloco 4 do setor 1
 #define BLOCO_GRAVACAO_REI 1  // bloco 4 do setor 1
@@ -35,7 +34,6 @@ extern "C" void init_buttons(); // Chama o assembly
 MFRC522 rfid(SS_PIN, RST_PIN);
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
-
 // Portas dos botões
 const byte btnUp = 47;
 const byte btnDown = 38;
@@ -43,13 +41,9 @@ const byte btnEnter = 49;
 const byte btnBack = 48;
 
 //-------------Portas RJ11
-
-const byte sensorpin_1 = 62; // A8
-const byte sensorpin_2 = 2;
-
 // M1
-const byte M2_A = 62; // A8
-const byte M2_D = 2;
+const byte M1_A = 62; // A8
+const byte M1_D = 2;
 // M2
 const byte M2_A = 63; // A9
 const byte M2_D = 3;
@@ -104,7 +98,6 @@ MenuItem gravacaoCartas[] = {
 };
 
 MenuItem testeSensores[] = {
-  {"Educa Nave", NULL, 0},
   {"Laser 650nm", NULL, 0},
   {"Sens. Botao", NULL, 0},
   {"Sens. Chuva", NULL, 0},
@@ -125,7 +118,6 @@ MenuItem testeSensores[] = {
   {"Sens. pH", NULL, 0}
 };
 
-
 MenuItem mainMenu[] = {
   {"Gravador RFID", gravacaoCartas, 3},
   {"Teste Sensores", testeSensores, 20}
@@ -141,7 +133,6 @@ void setup() {
   SPI.begin();
   rfid.PCD_Init();
   
-
   lcd.init();
   lcd.backlight();
 
@@ -241,7 +232,6 @@ void loop() {
       else if (strcmp(title, "Sens. Temperatura") == 0) sensor_temperatura(); 
       else if (strcmp(title, "Sens. Hall") == 0) sensor_hall(); 
       else if (strcmp(title, "Sens. Chuva") == 0) sensor_chuva();
-    //else if (strcmp(title, "Sens. RFID") == 0) sensor_rfid();
       else if (strcmp(title, "Sens. Vibracao") == 0) sensor_vibracao();
       else if (strcmp(title, "Sens. Peltier") == 0) sensor_peltier();
       else if (strcmp(title, "Sens. PIR") == 0) sensor_pir();

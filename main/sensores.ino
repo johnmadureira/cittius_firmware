@@ -1,8 +1,4 @@
 /* 
-  sensorpin_1 = 62 ou A8
-  sensorpin_2 = 2
-
-
 // M1
 const byte M1_A = 62; // A8
 const byte M1_D = 2;
@@ -29,12 +25,86 @@ void sensor_MODELO() {
 }
 */
 
+void sensor_botao() {
+  // Configura os pinos como entrada com pull-up
+  pinMode(M1_A, INPUT_PULLUP);
+  pinMode(M2_A, INPUT_PULLUP);
+  pinMode(M3_A, INPUT_PULLUP);
+  pinMode(M4_A, INPUT_PULLUP);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Teste de Botoes");
+
+  while (digitalRead(btnBack) == HIGH) {
+    lcd.setCursor(0, 1);
+    lcd.print("S1:");
+    lcd.print(digitalRead(M1_A) == LOW ? "ON " : "OFF");
+
+    lcd.setCursor(7, 1);
+    lcd.print("S2:");
+    lcd.print(digitalRead(M2_A) == LOW ? "ON " : "OFF");
+
+    lcd.setCursor(0, 2);
+    lcd.print("S3:");
+    lcd.print(digitalRead(M3_A) == LOW ? "ON " : "OFF");
+
+    lcd.setCursor(7, 2);
+    lcd.print("S4:");
+    lcd.print(digitalRead(M4_A) == LOW ? "ON " : "OFF");
+
+    delay(200);
+  }
+
+  lcd.clear();
+  lcd.print("Retornando ao menu");
+  delay(500);
+}
+
+// 4 sensores
 void sensor_forca() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Forca");
+
+  while (digitalRead(btnBack) == HIGH) {  // Enquanto não pressionar o botão Back
+    int v1 = analogRead(M1_A);
+    int v2 = analogRead(M2_A);
+    int v3 = analogRead(M3_A);
+    int v4 = analogRead(M4_A);
+
+    lcd.setCursor(0, 2);
+    lcd.print("S1:");
+    lcd.print(v1);
+    lcd.print("     "); // Limpa resquícios
+    lcd.setCursor(10, 2);
+    lcd.print("S2:");
+    lcd.print(v2);
+    lcd.print("     "); // Limpa resquícios
+    lcd.setCursor(0, 3);
+    lcd.print("S3:");
+    lcd.print(v3);
+    lcd.print("     "); // Limpa resquícios
+    lcd.setCursor(10, 3);
+    lcd.print("S4:");
+    lcd.print(v4);
+    lcd.print("     "); // Limpa resquícios
+
+    delay(200);
+  }
+
+  lcd.clear();
+  lcd.print("Retornando ao menu");
+  delay(500);
+}
+
+/*
+//void sensor_forca_apenasUm() {
 
   lcd.clear();
 
   while (digitalRead(btnBack) == HIGH) { // Enquanto o botão NÃO estiver pressionado
-    int valor = analogRead(sensorpin_1); // Leitura da força
+    int valor = analogRead(M1_A); // Leitura da força
     int barra = map(valor, 0, 700, 0, 20); // Converte para 0-20 colunas no LCD
 
     // Define mensagem com base na força
@@ -70,14 +140,15 @@ void sensor_forca() {
   lcd.setCursor(0, 0);
   lcd.print("Retornando ao menu");
   delay(500);
-}
+}*/
+/*
 void sensor_botao() {
-  pinMode(sensorpin_1, INPUT_PULLUP); 
+  pinMode(M1_A, INPUT_PULLUP); 
   lcd.clear();
 
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
       
-    int estadoBotao = digitalRead(sensorpin_1);  // Lê o estado do botão
+    int estadoBotao = digitalRead(M1_A);  // Lê o estado do botão
   
 
     if (estadoBotao == LOW) {  // Quando o botão for pressionado (LOW devido ao INPUT_PULLUP)
@@ -98,14 +169,15 @@ void sensor_botao() {
   lcd.setCursor(0, 0);
   lcd.print("Retornando ao menu");
   delay(500);
-}
+}*/
+
 void sensor_gas() {
 
   lcd.clear();
 
   while (digitalRead(btnBack) == HIGH) { 
 
-    int leitura = analogRead(sensorpin_1);  // Lê valor entre 0-1023
+    int leitura = analogRead(M1_A);  // Lê valor entre 0-1023
     int barra = map(leitura, 200, 800, 0, 20);  // Mapeia para 0-20 blocos
 
   // Limpa e atualiza a linha de leitura
@@ -142,20 +214,20 @@ void sensor_ultrassonico() {
   lcd.setCursor(0, 0);
   lcd.print("Sensor Ultrassonico");
 
-  pinMode(sensorpin_2, OUTPUT);  // Trig
-  pinMode(sensorpin_1, INPUT);   // Echo
+  pinMode(M1_D, OUTPUT);  // Trig
+  pinMode(M1_A, INPUT);   // Echo
 
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
     // Envia pulso para o Trig
-    digitalWrite(sensorpin_2, LOW);
+    digitalWrite(M1_D, LOW);
     delayMicroseconds(2);
-    digitalWrite(sensorpin_2, HIGH);
+    digitalWrite(M1_D, HIGH);
     delayMicroseconds(10);
-    digitalWrite(sensorpin_2, LOW);
+    digitalWrite(M1_D, LOW);
 
     // Mede o tempo do pulso de retorno no Echo
-    long duration = pulseIn(sensorpin_1, HIGH);
+    long duration = pulseIn(M1_A, HIGH);
 
     // Calcula a distância em cm
     float distance = duration * 0.034 / 2;
@@ -193,7 +265,7 @@ void sensor_ph() {
    
 
 
-    int leituraAnalogica = analogRead(sensorpin_1);
+    int leituraAnalogica = analogRead(M1_A);
     float tensao = (leituraAnalogica * VREF) / RESOLUCAO;
 
     // Fórmula baseada na faixa típica de 0-14 pH ≈ 0-3V
@@ -223,11 +295,11 @@ void sensor_IR() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Sensor Infravermelho");
-  pinMode(sensorpin_1, INPUT);
+  pinMode(M1_A, INPUT);
 
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
-    int leitura = digitalRead(sensorpin_1);
+    int leitura = digitalRead(M1_A);
 
     lcd.setCursor(0, 2);
     if (leitura == LOW) {
@@ -254,7 +326,7 @@ void sensor_umidadeSolo() {
 
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
-    int leitura = analogRead(sensorpin_1);
+    int leitura = analogRead(M1_A);
     
     // Convertendo leitura para percentual (ajustar se necessário)
     int umidadePercentual = map(leitura, 1023, 0, 0, 100); // Solo seco: valor alto, solo molhado: valor baixo
@@ -288,7 +360,7 @@ void sensor_laser() {
   lcd.setCursor(0, 0);
   lcd.print(" Teste Laser 650nm ");
 
-  pinMode(sensorpin_1, OUTPUT);  // Configura o pino do laser como saída
+  pinMode(M1_A, OUTPUT);  // Configura o pino do laser como saída
 
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
@@ -296,13 +368,13 @@ void sensor_laser() {
     lcd.print("Status: Desligado ");
 
     // Liga o diodo a laser
-    digitalWrite(sensorpin_1, HIGH);
+    digitalWrite(M1_A, HIGH);
     lcd.setCursor(0, 2);
     lcd.print("Status: Ligado   ");
     delay(3000);  // Laser ligado por 2 segundos
     
     // Desliga o diodo a laser
-    digitalWrite(sensorpin_1, LOW);
+    digitalWrite(M1_A, LOW);
     lcd.setCursor(0, 2);
     lcd.print("Status: Desligado ");
     delay(1000);  // Laser desligado por 2 segundos
@@ -321,7 +393,7 @@ void sensor_temperatura() {
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
 
-    OneWire oneWire(sensorpin_1);
+    OneWire oneWire(M1_A);
     DallasTemperature sensors(&oneWire);
     sensors.begin();
     sensors.requestTemperatures();
@@ -350,10 +422,10 @@ void sensor_hall() {
   lcd.setCursor(0, 0);
   lcd.print("Sensor Hall:");
 
-  pinMode(sensorpin_1, INPUT);
+  pinMode(M1_A, INPUT);
 
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
-    int estado = digitalRead(sensorpin_1);
+    int estado = digitalRead(M1_A);
 
     lcd.setCursor(0, 2);  // Linha 3 (índice começa do zero)
     lcd.print("Status:                ");  // Limpa linha
@@ -377,10 +449,10 @@ void sensor_chuva() {
   lcd.clear();
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
-    pinMode(sensorpin_2, INPUT);
+    pinMode(M1_D, INPUT);
 
-    int valorAnalogico = analogRead(sensorpin_1);
-    int estadoChuva = digitalRead(sensorpin_2);
+    int valorAnalogico = analogRead(M1_A);
+    int estadoChuva = digitalRead(M1_D);
     int umidade = map(valorAnalogico, 1023, 0, 0, 100); // Converte para umidade percentual aproximada
 
     // Exibe os dados no LCD
@@ -417,7 +489,7 @@ void sensor_vibracao() {
   unsigned long ultimaVibracao = 0;
   const unsigned long intervalo = 300; // tempo mínimo entre leituras
   bool estadoAnterior = false;
-  pinMode(sensorpin_2, INPUT);
+  pinMode(M1_D, INPUT);
 
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
@@ -427,7 +499,7 @@ void sensor_vibracao() {
 
 
 
-    int leitura = digitalRead(sensorpin_2);
+    int leitura = digitalRead(M1_D);
     unsigned long agora = millis();
 
     if (leitura == HIGH && !estadoAnterior && (agora - ultimaVibracao > intervalo)) {
@@ -460,12 +532,12 @@ void sensor_peltier() {
   lcd.setCursor(0, 0);
   lcd.print("Teste Peltier");
 
-  pinMode(sensorpin_2, OUTPUT);
+  pinMode(M1_D, OUTPUT);
 
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressionado
 
       // Liga a pastilha
-      digitalWrite(sensorpin_2, HIGH);
+      digitalWrite(M1_D, HIGH);
 
       // Contagem regressiva de 10s ligada
       for (int i = 30; i > 0; i--) {
@@ -479,7 +551,7 @@ void sensor_peltier() {
       }
 
       // Desliga a pastilha
-      digitalWrite(sensorpin_2, LOW);
+      digitalWrite(M1_D, LOW);
 
       // Contagem regressiva de 2s desligada
       for (int i = 2; i > 0; i--) {
@@ -507,8 +579,8 @@ void sensor_pir() {
     lcd.setCursor(0, 0);
     lcd.print("Sensor movimento:");
 
-    pinMode(sensorpin_1, INPUT);  // A8 usado como entrada digital
-    int estado = digitalRead(sensorpin_1);
+    pinMode(M1_A, INPUT);  // A8 usado como entrada digital
+    int estado = digitalRead(M1_A);
 
     if (estado == HIGH) {
       lcd.setCursor(0, 1);
@@ -533,7 +605,7 @@ void sensor_pir() {
 void sensor_decibel() {
 
   lcd.clear();
-  pinMode(sensorpin_1, INPUT);
+  pinMode(M1_A, INPUT);
   // Caracteres personalizados para barra
   byte barra0[8] = {B00000,B00000,B00000,B00000,B00000,B00000,B00000,B00000};
   byte barra1[8] = {B10000,B10000,B10000,B10000,B10000,B10000,B10000,B10000};
@@ -557,7 +629,7 @@ void sensor_decibel() {
 
 
 
-      int valorSom = analogRead(sensorpin_1);
+      int valorSom = analogRead(M1_A);
 
       int dbSimulado = map(valorSom, 500, 750, 30, 100);
       dbSimulado = constrain(dbSimulado, 0, 100);
@@ -600,7 +672,7 @@ void sensor_decibel() {
 }
 void sensor_correnteSCT() {
   lcd.clear();
-  pinMode(sensorpin_1, INPUT);
+  pinMode(M1_A, INPUT);
 
   const float referenciaVoltagem = 5.0;
   const int numAmostras = 1000;
@@ -612,7 +684,7 @@ void sensor_correnteSCT() {
       float somaQuadrados = 0.0;
 
       for (int i = 0; i < numAmostras; i++) {
-        int leituraADC = analogRead(sensorpin_1);
+        int leituraADC = analogRead(M1_A);
         float tensao = (leituraADC / 1023.0) * referenciaVoltagem;
         float diferenca = tensao - tensaoOffset;
         somaQuadrados += diferenca * diferenca;
@@ -667,7 +739,7 @@ void sensor_umidaderel() {
 
   while (digitalRead(btnBack) == HIGH) {  // Enquanto o botão NÃO estiver pressiona
 
-      DHT.read11(sensorpin_1); // Lê os dados do sensor
+      DHT.read11(M1_A); // Lê os dados do sensor
 
       float umidade = DHT.humidity;
       float temperatura = DHT.temperature;
